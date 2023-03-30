@@ -1,0 +1,16 @@
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal) {
+    @font-face {
+        font-family: $font-family;
+        src: url('#{$file-path}.ttf');
+        font-weight: $weight;
+        font-style: $style;
+        font-display: swap;
+    }
+}
+
+@include font-face("Inter", "../assets/fonts/inter/Inter-Light", 300, light);
+@include font-face("Inter", "../assets/fonts/inter/Inter-Regular", 400, regular);
+@include font-face("Inter", "../assets/fonts/inter/Inter-Medium", 500, medium);
+@include font-face("Inter", "../assets/fonts/inter/Inter-SemiBold", 600, semibold);
+@include font-face("Inter", "../assets/fonts/inter/Inter-Bold", 700, bold);
+@include font-face("Inter", "../assets/fonts/inter/Inter-ExtraBold", 800, extrabold);
