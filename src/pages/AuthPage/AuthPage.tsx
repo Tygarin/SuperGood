@@ -1,28 +1,55 @@
+import { Button, FieldGroup } from "components";
 import { FC } from "react";
-import { Form, Field } from "react-final-form";
+import { Form } from "react-bootstrap";
+import { Form as FinalForm } from "react-final-form";
+import { Link } from "react-router-dom";
+
+interface AuthFormValues {
+  name: string;
+  password: string;
+}
 
 export const AuthPage: FC = () => {
   const initialValues = {
     name: undefined,
     password: undefined,
   };
-  const handleSubmit = () => {};
+
+  const handleSubmit = (values: AuthFormValues) => {
+    console.log(values);
+  };
+
   return (
-    <section>
+    <>
       <h1 className="text-center text-xl my-10">Авторизация</h1>
       <div className="w-[400px] mx-auto border-solid border-black border p-10">
-        <Form
+        <FinalForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
           render={({ handleSubmit }) => (
-            <form className="flex gap-5 flex-col" onSubmit={handleSubmit}>
-              <Field name="name" component="input" type="text" />
-              <Field name="password" component="input" type="password" />
-              <button>Войти</button>
-            </form>
+            <Form className="flex gap-3 flex-col" onSubmit={handleSubmit}>
+              <FieldGroup type="string" name="name" text="Имя пользователя" />
+              <FieldGroup type="password" name="password" text="Пароль" />
+              <p>Нет аккаунта? <Link to="/registration">Зарегистрируйтесь</Link></p>
+              <Button type="submit" className="mt-5">
+                Войти
+              </Button>
+            </Form>
           )}
+          validate={({ name, password }) => {
+            const errors: Partial<AuthFormValues> = {};
+            if (!name || name?.length < 5 || name?.length > 20) {
+              errors.name =
+                "Количество символов должно быть в диапозоне от 5 до 20";
+            }
+            if (!password || password?.length < 5 || password?.length > 20) {
+              errors.password =
+                "Количество символов должно быть в диапозоне от 5 до 20";
+            }
+            return errors;
+          }}
         />
       </div>
-    </section>
+    </>
   );
 };

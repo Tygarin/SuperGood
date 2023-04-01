@@ -6,7 +6,7 @@ export const Button: FC<{ children: ReactNode } & ButtonProps> = ({
   ...rest
 }) => {
   return (
-    <ButtonComponent className="" {...rest}>
+    <ButtonComponent variant="primary" className="" {...rest}>
       {children}
     </ButtonComponent>
   );
