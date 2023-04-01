@@ -2,7 +2,6 @@ import { Button, FieldGroup } from "components";
 import { FC } from "react";
 import { Form } from "react-bootstrap";
 import { Form as FinalForm } from "react-final-form";
-import { Link } from "react-router-dom";
 
 interface AuthFormValues {
   name: string;
@@ -22,15 +21,18 @@ export const AuthPage: FC = () => {
   return (
     <>
       <h1 className="text-center text-xl my-10">Авторизация</h1>
-      <div className="w-[400px] mx-auto border-solid border-black border p-10">
+      <div className="w-[400px] rounded-2xl mx-auto border-solid border-black border p-10">
         <FinalForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
           render={({ handleSubmit }) => (
             <Form className="flex gap-3 flex-col" onSubmit={handleSubmit}>
-              <FieldGroup type="string" name="name" text="Имя пользователя" />
-              <FieldGroup type="password" name="password" text="Пароль" />
-              <p>Нет аккаунта? <Link to="/registration">Зарегистрируйтесь</Link></p>
+              <FieldGroup
+                type="string"
+                name="name"
+                text="Идентификатор пользователя:"
+              />
+              <FieldGroup type="password" name="password" text="Пароль:" />
               <Button type="submit" className="mt-5">
                 Войти
               </Button>
