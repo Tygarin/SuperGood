@@ -20,24 +20,26 @@ export const AuthPage: FC = () => {
 
   return (
     <>
-      <h1 className="text-center text-xl my-10">Авторизация</h1>
+      <h1 className="text-center text-[28px] font-semibold my-10">Авторизация</h1>
       <div className="w-[400px] rounded-2xl mx-auto border-solid border-black border p-10">
         <FinalForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          render={({ handleSubmit }) => (
-            <Form className="flex gap-3 flex-col" onSubmit={handleSubmit}>
-              <FieldGroup
-                type="string"
-                name="name"
-                text="Идентификатор пользователя:"
-              />
-              <FieldGroup type="password" name="password" text="Пароль:" />
-              <Button type="submit" className="mt-5">
-                Войти
-              </Button>
-            </Form>
-          )}
+          render={({ handleSubmit, valid }) => {
+            return (
+              <Form className="flex gap-3 flex-col" onSubmit={handleSubmit}>
+                <FieldGroup
+                  type="string"
+                  name="name"
+                  text="Идентификатор пользователя:"
+                />
+                <FieldGroup type="password" name="password" text="Пароль:" />
+                <Button disabled={!valid} type="submit" className="mt-5">
+                  Войти
+                </Button>
+              </Form>
+            );
+          }}
           validate={({ name, password }) => {
             const errors: Partial<AuthFormValues> = {};
             if (!name || name?.length < 5 || name?.length > 20) {

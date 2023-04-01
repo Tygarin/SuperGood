@@ -1,14 +1,22 @@
 import { FC } from "react";
-import { Routes, BrowserRouter, Route, Navigate } from "react-router-dom";
-import { AuthPage } from "pages";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { AuthPage, MainPage } from "pages";
+import { useAuthContext } from "components";
 
 export const App: FC = () => {
-  return (
-    <BrowserRouter>
+  const { isAuth } = useAuthContext();
+
+  if (isAuth)
+    return (
       <Routes>
-        <Route path="*" element={<Navigate to="/auth" />} />
-        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/" element={<MainPage />} />
       </Routes>
-    </BrowserRouter>
+    );
+
+  return (
+    <Routes>
+      <Route path="*" element={<Navigate to="/auth" />} />
+      <Route path="/auth" element={<AuthPage />} />
+    </Routes>
   );
 };
