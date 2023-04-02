@@ -34,3 +34,11 @@ export const getCurrentUser = async () => {
   });
   return response.data;
 };
+
+export const getUsers = async () => {
+  const response = await authApi.get<User[]>("auth/users", {
+    headers: getHeaders(),
+  });
+  await new Promise((res, rej) => setTimeout(() => res(true), 5000));
+  return response.data;
+};
