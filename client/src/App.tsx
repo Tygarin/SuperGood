@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthPage, MainPage } from "pages";
-import { useAuthContext } from "components";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
+import { useAuthContext } from "context";
 
 const RoutesComponent: FC = () => {
   const { isAuth } = useAuthContext();
