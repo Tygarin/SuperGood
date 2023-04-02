@@ -1,26 +1,56 @@
-import { Button, FieldGroup } from "components";
-import { FC } from "react";
+import { loginUserFn } from "api";
+import { Button, FieldGroup, useAuthContext } from "components";
+import { FC, useMemo } from "react";
 import { Form } from "react-bootstrap";
 import { Form as FinalForm } from "react-final-form";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { isAxiosError } from "axios";
 
 interface AuthFormValues {
-  name: string;
+  userIdentify: string;
   password: string;
 }
 
 export const AuthPage: FC = () => {
   const initialValues = {
-    name: undefined,
+    userIdentify: undefined,
     password: undefined,
   };
 
+  const { setToken } = useAuthContext();
+  const navigate = useNavigate();
+
+  const { mutateAsync, error, isError, isLoading } = useMutation({
+    mutationFn: (user: { userIdentify: string; password: string }) =>
+      loginUserFn(user),
+    onSuccess: ({ token }) => {
+      setToken(token);
+      navigate("/");
+    },
+    onError: (error) => {
+      if (isAxiosError(error) && error.response) {
+        return error.response.data;
+      }
+    },
+  });
+
   const handleSubmit = (values: AuthFormValues) => {
-    console.log(values);
+    mutateAsync(values);
   };
+
+  const errorMessage = useMemo(() => {
+    if (error && isAxiosError(error) && error.response) {
+      return error.response.data.message;
+    }
+    return;
+  }, [error]);
 
   return (
     <>
-      <h1 className="text-center text-[28px] font-semibold my-10">Авторизация</h1>
+      <h1 className="text-center text-[28px] font-semibold my-10">
+        Авторизация
+      </h1>
       <div className="w-[400px] rounded-2xl mx-auto border-solid border-black border p-10">
         <FinalForm
           initialValues={initialValues}
@@ -30,20 +60,36 @@ export const AuthPage: FC = () => {
               <Form className="flex gap-3 flex-col" onSubmit={handleSubmit}>
                 <FieldGroup
                   type="string"
-                  name="name"
+                  name="userIdentify"
                   text="Идентификатор пользователя:"
                 />
                 <FieldGroup type="password" name="password" text="Пароль:" />
-                <Button disabled={!valid} type="submit" className="mt-5">
-                  Войти
-                </Button>
+                <div>
+                  <Button
+                    disabled={!valid}
+                    isLoading={isLoading}
+                    type="submit"
+                    className="mt-5 w-full"
+                  >
+                    Войти
+                  </Button>
+                  {isError && (
+                    <p className="text-red-600 text-xs mt-2 mb-0">
+                      {errorMessage}
+                    </p>
+                  )}
+                </div>
               </Form>
             );
           }}
-          validate={({ name, password }) => {
+          validate={({ userIdentify, password }) => {
             const errors: Partial<AuthFormValues> = {};
-            if (!name || name?.length < 5 || name?.length > 20) {
-              errors.name =
+            if (
+              !userIdentify ||
+              userIdentify?.length < 5 ||
+              userIdentify?.length > 20
+            ) {
+              errors.userIdentify =
                 "Количество символов должно быть в диапозоне от 5 до 20";
             }
             if (!password || password?.length < 5 || password?.length > 20) {
