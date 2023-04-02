@@ -7,6 +7,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 router.post(
   "/registration",
   [
+    authMiddleware,
     check(
       "userIdentify",
       "Идентификатор пользователя не может быть пустым"
@@ -20,5 +21,6 @@ router.post(
 );
 router.post("/login", controller.login);
 router.get("/users", authMiddleware, controller.getUsers);
+router.get("/user", authMiddleware, controller.getUser);
 
 module.exports = router;
