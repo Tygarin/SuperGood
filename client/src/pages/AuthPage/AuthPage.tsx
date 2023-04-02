@@ -43,7 +43,7 @@ export const AuthPage: FC = () => {
     if (error && isAxiosError(error) && error.response) {
       return error.response.data.message;
     }
-    return;
+    return "Ошибка сервера";
   }, [error]);
 
   return (
