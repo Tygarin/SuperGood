@@ -3,6 +3,7 @@ import { useAuthContext } from "context";
 import { useCurrentUser } from "libs";
 import { FC } from "react";
 import { Navbar as BootstrapNavBar, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export const NavBar: FC = () => {
   const { userInfo } = useCurrentUser();
@@ -11,7 +12,9 @@ export const NavBar: FC = () => {
   return (
     <BootstrapNavBar bg="light">
       <Container>
-        <BootstrapNavBar.Brand>Строй.ру</BootstrapNavBar.Brand>
+        <BootstrapNavBar.Brand as={Link} to="/">
+          Строй.ру
+        </BootstrapNavBar.Brand>
         {userInfo && (
           <div className="justify-content-end d-flex items-center gap-3">
             <p className="m-0">{userInfo.userIdentify}</p>
