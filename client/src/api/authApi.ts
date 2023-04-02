@@ -1,7 +1,13 @@
 import axios from "axios";
-import { LoginResponse } from "./responses";
+import { LoginResponse, User } from "./responses";
 
 const BASE_URL = "http://localhost:5000/";
+
+const getHeaders = () => {
+  const token = localStorage.getItem("token");
+  if (token) return { Authorization: `Bearer ${token}` };
+  return {};
+};
 
 const authApi = axios.create({
   baseURL: BASE_URL,
@@ -18,6 +24,13 @@ export const loginUserFn = async ({
   const response = await authApi.post<LoginResponse>("auth/login", {
     userIdentify,
     password,
+  });
+  return response.data;
+};
+
+export const getCurrentUser = async () => {
+  const response = await authApi.get<User>("auth/user", {
+    headers: getHeaders(),
   });
   return response.data;
 };

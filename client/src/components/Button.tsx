@@ -7,10 +7,10 @@ import {
 
 export const Button: FC<
   { children: ReactNode; isLoading?: boolean } & ButtonProps
-> = ({ children, disabled, isLoading, ...rest }) => {
+> = ({ children, disabled, isLoading, variant, ...rest }) => {
   return (
     <ButtonComponent
-      variant="primary"
+      variant={variant || "primary"}
       disabled={disabled || isLoading}
       className=""
       {...rest}

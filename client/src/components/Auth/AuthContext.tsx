@@ -9,10 +9,12 @@ const AuthContext = createContext<{
   token: string | null;
   isAuth: boolean;
   setToken: (token: string) => void;
+  logout: () => void;
 }>({
   token: null,
   isAuth: false,
   setToken: (token: string) => undefined,
+  logout: () => undefined,
 });
 
 const AuthContextProvider = AuthContext.Provider;
@@ -25,8 +27,13 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     _setToken(token);
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    _setToken(null);
+  };
+
   return (
-    <AuthContextProvider value={{ token, isAuth, setToken }}>
+    <AuthContextProvider value={{ token, isAuth, setToken, logout }}>
       {children}
     </AuthContextProvider>
   );
