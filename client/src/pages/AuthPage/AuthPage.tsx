@@ -6,6 +6,7 @@ import { Form as FinalForm } from "react-final-form";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
+import { toast } from "react-toastify";
 
 interface AuthFormValues {
   userIdentify: string;
@@ -27,11 +28,7 @@ export const AuthPage: FC = () => {
     onSuccess: ({ token }) => {
       setToken(token);
       navigate("/");
-    },
-    onError: (error) => {
-      if (isAxiosError(error) && error.response) {
-        return error.response.data;
-      }
+      toast.success("Вы успешно вошли в систему!");
     },
   });
 
@@ -51,7 +48,7 @@ export const AuthPage: FC = () => {
       <h1 className="text-center text-[28px] font-semibold my-10">
         Авторизация
       </h1>
-      <div className="w-[400px] rounded-2xl mx-auto border-solid border-black border p-10">
+      <div className="w-[400px] min-h-[365px] rounded-2xl mx-auto border-solid border-black border p-10">
         <FinalForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
