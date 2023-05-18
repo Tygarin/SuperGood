@@ -2,6 +2,7 @@ import axios from "axios";
 import { LoginResponse, User } from "./responses";
 
 const BASE_URL = "http://localhost:5000/";
+export type Role = "ADMIN" | "USER";
 
 const getHeaders = () => {
   const token = localStorage.getItem("token");
@@ -28,6 +29,26 @@ export const loginUserFn = async ({
   return response.data;
 };
 
+export const registrationUserFn = async ({
+  userIdentify,
+  password,
+  role,
+}: {
+  userIdentify: string;
+  password: string;
+  role: Role;
+}) => {
+  const response = await authApi.post<{ message: string }>(
+    "auth/registration",
+    {
+      userIdentify,
+      password,
+      role,
+    }
+  );
+  return response.data;
+};
+
 export const getCurrentUser = async () => {
   const response = await authApi.get<User>("auth/user", {
     headers: getHeaders(),
@@ -39,6 +60,6 @@ export const getUsers = async () => {
   const response = await authApi.get<User[]>("auth/users", {
     headers: getHeaders(),
   });
-  await new Promise((res, rej) => setTimeout(() => res(true), 5000));
+  await new Promise((res) => setTimeout(() => res(true), 5000));
   return response.data;
 };

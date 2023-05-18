@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { AuthPage, MainPage } from "pages";
+import { AuthPage, MainPage, ProfilePage } from "pages";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 import { useAuthContext } from "context";
@@ -12,6 +12,7 @@ const RoutesComponent: FC = () => {
     return (
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/profiles/:userID" element={<ProfilePage />} />
       </Routes>
     );
 

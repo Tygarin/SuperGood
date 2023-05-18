@@ -3,7 +3,7 @@ import { Roles } from "constant";
 import { useCurrentUser, useUsersList } from "libs";
 import { FC, Suspense } from "react";
 import { Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const UsersLoader: FC = () => {
   return (
@@ -28,14 +28,27 @@ const UsersComponent: FC = () => {
   const { users } = useUsersList();
   const { userInfo } = useCurrentUser();
   const isAdmin = userInfo?.roles.includes(Roles.admin);
+  const [, setSearchParams] = useSearchParams();
+  const openCreateUserModal = () => {
+    setSearchParams({ modal: "createUser" });
+  };
+
   return (
     <>
       <div className="h-[300px] flex flex-col gap-2 overflow-auto">
         {users?.map(({ userIdentify }) => (
-          <Link to={`/profiles/${userIdentify}`}>{userIdentify}</Link>
+          <Link
+            key={userIdentify}
+            className="no-underline"
+            to={`/profiles/${userIdentify}`}
+          >
+            {userIdentify}
+          </Link>
         ))}
       </div>
-      {isAdmin && <Button>Создать пользователя</Button>}
+      {isAdmin && (
+        <Button onClick={openCreateUserModal}>Создать пользователя</Button>
+      )}
     </>
   );
 };

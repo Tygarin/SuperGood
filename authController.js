@@ -22,7 +22,7 @@ class AuthController {
           .status(400)
           .json({ message: "Ошибка при регистрации", errors });
       }
-      const { userIdentify, password } = req.body;
+      const { userIdentify, password, role } = req.body;
       const candidate = await User.findOne({ userIdentify });
       if (candidate) {
         return res.status(400).json({
@@ -30,7 +30,7 @@ class AuthController {
         });
       }
       const hashPassword = bcrypt.hashSync(password, 7);
-      const userRole = await Role.findOne({ value: "USER" });
+      const userRole = await Role.findOne({ value: role || "ADMIN" });
       const user = new User({
         userIdentify,
         password: hashPassword,
@@ -80,7 +80,7 @@ class AuthController {
   async getUser(req, res) {
     try {
       const user = await User.findById(req.user.id);
-      res.json(user)
+      res.json(user);
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "Get user error" });

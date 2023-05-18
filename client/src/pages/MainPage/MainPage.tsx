@@ -1,15 +1,34 @@
 import { FC } from "react";
 import { NavBar, UsersList } from "./components";
 import { Container } from "react-bootstrap";
+import { CreateUserModal } from "modals";
+import { Link } from "react-router-dom";
 
 export const MainPage: FC = () => {
+  const actionsList = [
+    { text: "Чаты", href: "/chatList" },
+    { text: "Задачи, назначенные на меня", href: "/myTasks" },
+    { text: "Задачи, созданные мной", href: "/createdByMeTasks" },
+  ];
   return (
     <>
       <NavBar />
       <Container>
-        <div></div>
-        <UsersList />
+        <div className="flex">
+          <section className="pt-5 flex flex-wrap gap-5">
+            {actionsList.map(({ text, href }) => (
+              <Link
+                to={href}
+                className="w-[200px] no-underline h-[200px] bg-blue-400 rounded-3xl flex justify-center items-center text-center text-white p-5 hover:bg-blue-700 cursor-pointer"
+              >
+                {text}
+              </Link>
+            ))}
+          </section>
+          <UsersList />
+        </div>
       </Container>
+      <CreateUserModal />
     </>
   );
 };
