@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-export const ChatPage: FC = () => {
+export const ChatsPage: FC = () => {
   const chatList = [
     {
       id: "11547723",
