@@ -7,7 +7,7 @@ export const PageLayout: FC<{ children: ReactNode; title: string }> = ({
   title,
 }) => {
   return (
-    <>
+    <section>
       <NavBar />
       <Container>
         <section className="pt-3">
@@ -15,6 +15,6 @@ export const PageLayout: FC<{ children: ReactNode; title: string }> = ({
           {children}
         </section>
       </Container>
-    </>
+    </section>
   );
 };

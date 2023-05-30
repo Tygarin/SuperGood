@@ -3,24 +3,25 @@ import { FC } from "react";
 import { Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+export const chatList = [
+  {
+    id: "11547723",
+    name: "Чат по закупке рубероида",
+    createdDate: "18.05.23",
+  },
+  {
+    id: "11757829",
+    name: "Баня",
+    createdDate: "18.05.23",
+  },
+  {
+    id: "15727879",
+    name: "Фролов и C.O.",
+    createdDate: "18.05.23",
+  },
+];
+
 export const ChatsPage: FC = () => {
-  const chatList = [
-    {
-      id: "11547723",
-      name: "Чат по закупке рубероида",
-      createdDate: "18.05.23",
-    },
-    {
-      id: "11757829",
-      name: "Баня",
-      createdDate: "18.05.23",
-    },
-    {
-      id: "15727879",
-      name: "Фролов и C.O.",
-      createdDate: "18.05.23",
-    },
-  ];
   return (
     <PageLayout title="Чаты">
       <Table striped bordered hover>
