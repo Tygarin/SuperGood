@@ -1,9 +1,10 @@
-import { getCurrentUser } from "api";
+import { useApi } from "api";
 import { useAuthContext } from "context";
 import { useQuery } from "react-query";
 
 export function useCurrentUser() {
   const { token } = useAuthContext();
+  const { getCurrentUser } = useApi();
   const { data, ...rest } = useQuery({
     queryKey: ["currentUser", token],
     queryFn: getCurrentUser,

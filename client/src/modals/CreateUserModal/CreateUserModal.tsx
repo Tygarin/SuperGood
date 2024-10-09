@@ -1,11 +1,12 @@
-import { Role, registrationUserFn } from "api";
+import { Role, useApi } from "api";
+import { User } from "api/responses";
 import { Button, FieldGroup } from "components";
 import { Roles } from "constant";
-import { useCurrentUser } from "libs";
+import { getErrorMessage, useCurrentUser } from "libs";
 import { FC } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { Field, Form as FinalForm } from "react-final-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -19,6 +20,7 @@ interface RegistrationFormValues {
 export const CreateUserModal: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { userInfo } = useCurrentUser();
+  const { registrationUserFn } = useApi();
   const isAdmin = userInfo?.roles.includes(Roles.admin);
 
   const isCreateUserModalOpen =
@@ -29,26 +31,32 @@ export const CreateUserModal: FC = () => {
     setSearchParams(searchParams);
   };
 
-  const { mutateAsync, isLoading } = useMutation({
+  const queryClient = useQueryClient();
+
+  const { mutateAsync, isLoading, isError, error } = useMutation({
     mutationFn: (user: {
       userIdentify: string;
       password: string;
       role: Role;
     }) => registrationUserFn(user),
-    onSuccess: ({ message }) => {
+    onSuccess: (newUser) => {
+      queryClient.setQueriesData<User[]>("usersList", (_previousData) => {
+        const previousData = _previousData ?? [];
+        return [...previousData, newUser];
+      });
       closeModal();
-      toast.success(message);
+      toast.success("Пользователь успешно добавлен!");
     },
   });
 
   const handleSubmit = (values: RegistrationFormValues) => {
-    console.log(values);
+    mutateAsync(values);
   };
 
   return (
     <Modal size="lg" centered show={isCreateUserModalOpen} onHide={closeModal}>
       <FinalForm
-        initialValues={{}}
+        initialValues={{ role: Roles.user }}
         onSubmit={handleSubmit}
         render={({ handleSubmit }) => {
           return (
@@ -88,7 +96,7 @@ export const CreateUserModal: FC = () => {
                   >
                     {({ input }) => (
                       <Form.Check
-                        id={Roles.user}
+                        id={Roles.admin}
                         label={"Админ"}
                         {...input}
                         type={"radio"}
@@ -101,17 +109,17 @@ export const CreateUserModal: FC = () => {
                   name="confirmationPassword"
                   text="Подтвердите пароль:"
                 />
-                {/* {isError && (
+                {isError && (
                   <p className="text-red-600 text-xs mt-2 mb-0">
-                    {errorMessage}
+                    {getErrorMessage(error)}
                   </p>
-                )} */}
+                )}
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={closeModal}>
                   Закрыть
                 </Button>
-                <Button variant="primary" type="submit">
+                <Button isLoading={isLoading} variant="primary" type="submit">
                   Создать пользователя
                 </Button>
               </Modal.Footer>

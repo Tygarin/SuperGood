@@ -1,13 +1,13 @@
-import { loginUserFn } from "api";
+import { useApi } from "api";
 import { Button, FieldGroup } from "components";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { Form } from "react-bootstrap";
 import { Form as FinalForm } from "react-final-form";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { isAxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuthContext } from "context";
+import { getErrorMessage } from "libs";
 
 interface AuthFormValues {
   userIdentify: string;
@@ -19,6 +19,7 @@ export const AuthPage: FC = () => {
     userIdentify: undefined,
     password: undefined,
   };
+  const { loginUserFn } = useApi();
 
   const { setToken } = useAuthContext();
   const navigate = useNavigate();
@@ -36,13 +37,6 @@ export const AuthPage: FC = () => {
   const handleSubmit = (values: AuthFormValues) => {
     mutateAsync(values);
   };
-
-  const errorMessage = useMemo(() => {
-    if (error && isAxiosError(error) && error.response) {
-      return error.response.data.message;
-    }
-    return "Ошибка сервера";
-  }, [error]);
 
   return (
     <>
@@ -73,7 +67,7 @@ export const AuthPage: FC = () => {
                   </Button>
                   {isError && (
                     <p className="text-red-600 text-xs mt-2 mb-0">
-                      {errorMessage}
+                      {getErrorMessage(error)}
                     </p>
                   )}
                 </div>
@@ -84,15 +78,15 @@ export const AuthPage: FC = () => {
             const errors: Partial<AuthFormValues> = {};
             if (
               !userIdentify ||
-              userIdentify?.length < 5 ||
+              userIdentify?.length < 3 ||
               userIdentify?.length > 20
             ) {
               errors.userIdentify =
-                "Количество символов должно быть в диапозоне от 5 до 20";
+                "Количество символов должно быть в диапозоне от 3 до 20";
             }
-            if (!password || password?.length < 5 || password?.length > 20) {
+            if (!password || password?.length < 3 || password?.length > 20) {
               errors.password =
-                "Количество символов должно быть в диапозоне от 5 до 20";
+                "Количество символов должно быть в диапозоне от 3 до 20";
             }
             return errors;
           }}

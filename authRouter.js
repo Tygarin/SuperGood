@@ -14,8 +14,8 @@ router.post(
     ).notEmpty(),
     check(
       "password",
-      "Пароль должен быть больше 5 и меньше 20 символов"
-    ).isLength({ min: 5, max: 20 }),
+      "Пароль должен быть больше 2 и меньше 20 символов"
+    ).isLength({ min: 2, max: 20 }),
   ],
   controller.registration
 );

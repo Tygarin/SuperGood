@@ -37,7 +37,7 @@ class AuthController {
         roles: [userRole.value],
       });
       await user.save();
-      return res.json({ message: "Пользователь успешно зарегистрирован!" });
+      return res.json(user);
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "Registration error" });
