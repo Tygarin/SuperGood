@@ -1,7 +1,10 @@
+import { useApi } from "api";
+import { ChatModel } from "api/responses";
 import { PageLayout } from "components";
-import { chatList } from "pages/ChatsPage";
+import { useUsersList } from "libs";
 import { FC } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useQuery } from "react-query";
 import { Navigate, useParams } from "react-router-dom";
 
 const messages = [
@@ -12,7 +15,11 @@ const messages = [
 
 export const ChatPage: FC = () => {
   const { chatID } = useParams();
-  const currentChat = chatList.find(({ id }) => id === chatID);
+  const { getChat } = useApi();
+  const { data: currentChat } = useQuery({
+    queryFn: () => getChat(`${chatID}`),
+    queryKey: ["getChat", chatID],
+  });
   if (!currentChat) return <Navigate to="/chatsPage" />;
   return (
     <PageLayout title={currentChat.name}>
@@ -57,9 +64,21 @@ export const ChatPage: FC = () => {
         </div>
         <div className="w-[20%]">
           <p>Список сотрудников в чате:</p>
-          <ul></ul>
+          <UserList members={currentChat.members} />
         </div>
       </section>
     </PageLayout>
+  );
+};
+
+const UserList: FC<{ members: ChatModel["members"] }> = ({ members }) => {
+  const { usersMap } = useUsersList();
+  return (
+    <ul className="pl-0">
+      {members.map((memberID) => {
+        const user = usersMap.get(memberID);
+        return <li key={memberID}>{user?.userIdentify}</li>;
+      })}
+    </ul>
   );
 };

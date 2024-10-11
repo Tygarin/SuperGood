@@ -11,7 +11,7 @@ const RoutesComponent: FC = () => {
   if (isAuth)
     return (
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route index element={<MainPage />} />
         <Route path="/profiles/:userID" element={<ProfilePage />} />
         <Route path="/chatsPage" element={<ChatsPage />} />
         <Route path="/chatsPage/:chatID" element={<ChatPage />} />

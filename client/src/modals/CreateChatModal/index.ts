@@ -1,2 +1,1 @@
-export * from "./CreateUserModal";
 export * from "./CreateChatModal";

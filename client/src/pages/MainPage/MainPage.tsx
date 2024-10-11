@@ -8,8 +8,6 @@ import { NavBar } from "components";
 export const MainPage: FC = () => {
   const actionsList = [
     { text: "Чаты", href: "/chatsPage" },
-    { text: "Задачи, назначенные на меня", href: "/createdToMeTasks" },
-    { text: "Задачи, созданные мной", href: "/createdByMeTasks" },
   ];
   return (
     <>

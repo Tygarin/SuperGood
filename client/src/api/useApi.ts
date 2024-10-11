@@ -1,8 +1,14 @@
 import axios from "axios";
-import { LoginResponse, User } from "./responses";
+import {
+  ChatModel,
+  CreateChatModel,
+  LoginResponse,
+  CreateUserModel,
+  UserModel,
+} from "./responses";
 import { useAuthContext } from "context";
 
-const BASE_URL = "http://localhost:5000/";
+export const BASE_URL = "http://localhost:5000/";
 export type Role = "ADMIN" | "USER";
 
 export const useApi = () => {
@@ -28,23 +34,19 @@ export const useApi = () => {
           password,
         })
         .then((res) => res.data),
-    registrationUserFn: ({
-      userIdentify,
-      password,
-      role,
-    }: {
-      userIdentify: string;
-      password: string;
-      role: Role;
-    }) =>
-      api
-        .post<User>("auth/registration", {
-          userIdentify,
-          password,
-          role,
-        })
-        .then((res) => res.data),
-    getCurrentUser: () => api.get<User>("auth/user").then((res) => res.data),
-    getUsers: () => api.get<User[]>("auth/users").then((res) => res.data),
+    registrationUserFn: (data: CreateUserModel) =>
+      api.post<UserModel>("auth/registration", data).then((res) => res.data),
+    getCurrentUser: () =>
+      api.get<UserModel>("auth/user").then((res) => res.data),
+    getUsers: () => api.get<UserModel[]>("auth/users").then((res) => res.data),
+    createChat: (chat: CreateChatModel) =>
+      api.post<ChatModel>("chat/createChat", chat).then((res) => res.data),
+    getChats: () => api.get<ChatModel[]>("chat/chats").then((res) => res.data),
+    getChat: (id: string) =>
+      api.get<ChatModel>(`chat/chat/${id}`).then((res) => res.data),
+    deleteChat: (id: string) =>
+      api.delete<ChatModel>(`chat/chat/${id}`).then((res) => res.data),
+    deleteUser: (id: string) =>
+      api.delete<UserModel>(`auth/user/${id}`).then((res) => res.data),
   };
 };

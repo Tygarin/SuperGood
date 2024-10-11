@@ -1,8 +1,8 @@
-import { Role, useApi } from "api";
-import { User } from "api/responses";
+import { useApi } from "api";
+import { CreateUserModel, UserModel } from "api/responses";
 import { Button, FieldGroup } from "components";
 import { Roles } from "constant";
-import { getErrorMessage, useCurrentUser } from "libs";
+import { getErrorMessage, useIsAdmin } from "libs";
 import { FC } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { Field, Form as FinalForm } from "react-final-form";
@@ -10,18 +10,15 @@ import { useMutation, useQueryClient } from "react-query";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-interface RegistrationFormValues {
-  userIdentify: string;
-  password: string;
+interface CreateUserModelFormValues extends Omit<CreateUserModel, "roles"> {
+  role: Roles;
   confirmationPassword: string;
-  role: Role;
 }
 
 export const CreateUserModal: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { userInfo } = useCurrentUser();
   const { registrationUserFn } = useApi();
-  const isAdmin = userInfo?.roles.includes(Roles.admin);
+  const isAdmin = useIsAdmin();
 
   const isCreateUserModalOpen =
     searchParams.get("modal") === "createUser" && isAdmin;
@@ -34,13 +31,9 @@ export const CreateUserModal: FC = () => {
   const queryClient = useQueryClient();
 
   const { mutateAsync, isLoading, isError, error } = useMutation({
-    mutationFn: (user: {
-      userIdentify: string;
-      password: string;
-      role: Role;
-    }) => registrationUserFn(user),
+    mutationFn: (user: CreateUserModel) => registrationUserFn(user),
     onSuccess: (newUser) => {
-      queryClient.setQueriesData<User[]>("usersList", (_previousData) => {
+      queryClient.setQueriesData<UserModel[]>("usersList", (_previousData) => {
         const previousData = _previousData ?? [];
         return [...previousData, newUser];
       });
@@ -49,15 +42,29 @@ export const CreateUserModal: FC = () => {
     },
   });
 
-  const handleSubmit = (values: RegistrationFormValues) => {
-    mutateAsync(values);
+  const handleSubmit = (values: CreateUserModelFormValues) => {
+    const model: CreateUserModel = {
+      name: values.name,
+      userIdentify: values.name,
+      password: values.password,
+      roles: [values.role],
+    };
+    mutateAsync(model);
   };
 
   return (
     <Modal size="lg" centered show={isCreateUserModalOpen} onHide={closeModal}>
-      <FinalForm
+      <FinalForm<CreateUserModelFormValues>
         initialValues={{ role: Roles.user }}
         onSubmit={handleSubmit}
+        validate={(values) => {
+          if (values.password !== values.confirmationPassword)
+            return {
+              password: "Пароли не совпадают",
+              confirmationPassword: "Пароли не совпадают",
+            };
+          return undefined;
+        }}
         render={({ handleSubmit }) => {
           return (
             <Form onSubmit={handleSubmit}>
@@ -65,6 +72,11 @@ export const CreateUserModal: FC = () => {
                 <Modal.Title>Создание пользователя</Modal.Title>
               </Modal.Header>
               <Modal.Body className="grid grid-cols-2 gap-4">
+                <FieldGroup
+                  type="string"
+                  name="name"
+                  text="Имя пользователя:"
+                />
                 <FieldGroup
                   type="string"
                   name="userIdentify"

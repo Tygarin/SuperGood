@@ -1,5 +1,6 @@
 import { useApi } from "api";
 import { useAuthContext } from "context";
+import { useMemo } from "react";
 import { useQuery } from "react-query";
 
 export function useUsersList() {
@@ -9,5 +10,9 @@ export function useUsersList() {
     queryKey: ["usersList", token],
     queryFn: getUsers,
   });
-  return { users: data, ...rest };
+  const [users, usersMap] = useMemo(() => {
+    const users = data ?? [];
+    return [users, new Map(users.map((user) => [user.userIdentify, user]))];
+  }, [data]);
+  return { users, usersMap, ...rest };
 }

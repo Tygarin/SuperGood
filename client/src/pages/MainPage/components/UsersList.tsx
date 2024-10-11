@@ -1,6 +1,7 @@
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "components";
-import { Roles } from "constant";
-import { useCurrentUser, useUsersList } from "libs";
+import { useIsAdmin, useUsersList } from "libs";
 import { FC, Suspense } from "react";
 import { Spinner } from "react-bootstrap";
 import { Link, useSearchParams } from "react-router-dom";
@@ -26,8 +27,7 @@ export const UsersList: FC = () => {
 
 const UsersComponent: FC = () => {
   const { users } = useUsersList();
-  const { userInfo } = useCurrentUser();
-  const isAdmin = userInfo?.roles.includes(Roles.admin);
+  const isAdmin = useIsAdmin();
   const [, setSearchParams] = useSearchParams();
   const openCreateUserModal = () => {
     setSearchParams({ modal: "createUser" });
@@ -37,13 +37,16 @@ const UsersComponent: FC = () => {
     <>
       <div className="h-[300px] flex flex-col gap-2 overflow-auto">
         {users?.map(({ userIdentify }) => (
-          <Link
-            key={userIdentify}
-            className="no-underline"
-            to={`/profiles/${userIdentify}`}
-          >
-            {userIdentify}
-          </Link>
+          <div className="flex justify-between pr-2" key={userIdentify}>
+            <Link className="no-underline" to={`/profiles/${userIdentify}`}>
+              {userIdentify}{" "}
+            </Link>
+            {isAdmin ? (
+              <button>
+                <FontAwesomeIcon color="#9b2d30" icon={faTrashCan} />
+              </button>
+            ) : null}
+          </div>
         ))}
       </div>
       {isAdmin && (
