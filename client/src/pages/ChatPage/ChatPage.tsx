@@ -77,7 +77,7 @@ const UserList: FC<{ members: ChatModel["members"] }> = ({ members }) => {
     <ul className="pl-0">
       {members.map((memberID) => {
         const user = usersMap.get(memberID);
-        return <li key={memberID}>{user?.userIdentify}</li>;
+        return <li key={memberID}>{user?.name}</li>;
       })}
     </ul>
   );

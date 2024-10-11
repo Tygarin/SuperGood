@@ -10,6 +10,7 @@ import { FC, PropsWithChildren } from "react";
 import { Table } from "react-bootstrap";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const ChatsPage: FC = () => {
   const { getChats } = useApi();
@@ -87,6 +88,7 @@ const DeleteButton: FC<{ id: string }> = ({ id }) => {
         const previousData = _previousData ?? [];
         return previousData.filter((chat) => chat._id !== deletedChat._id);
       });
+      toast.success("Чат успешно удален!");
     },
   });
   return (

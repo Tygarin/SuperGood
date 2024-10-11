@@ -3,3 +3,4 @@ export * from "./FieldGroup";
 export * from "./LoadingComponent";
 export * from "./NavBar";
 export * from "./PageLayout";
+export * from "./ConfirmationContainer";

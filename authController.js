@@ -90,6 +90,10 @@ class AuthController {
 
   async deleteUser(req, res) {
     try {
+      if (req.user.id === req.params.id)
+        return res.status(400).json({
+          message: `Нельзя удалить себя!`,
+        });
       const user = await User.findByIdAndDelete(req.params.id);
       res.json(user);
     } catch (error) {

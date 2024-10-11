@@ -2,9 +2,10 @@ export interface CreateUserModel {
   name: string;
   userIdentify: string;
   password: string;
-  roles: string[];
+  role: string;
 }
 
-export interface UserModel extends CreateUserModel {
+export interface UserModel extends Omit<CreateUserModel, "role"> {
   _id: string;
+  roles: string[];
 }

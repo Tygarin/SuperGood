@@ -4,6 +4,7 @@ import { AuthPage, ChatPage, ChatsPage, MainPage, ProfilePage } from "pages";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 import { useAuthContext } from "context";
+import { ConfirmationContainer } from "components";
 
 const RoutesComponent: FC = () => {
   const { isAuth } = useAuthContext();
@@ -31,6 +32,7 @@ export const App: FC = () => {
     <BrowserRouter>
       <RoutesComponent />
       <ToastContainer />
+      <ConfirmationContainer />
     </BrowserRouter>
   );
 };

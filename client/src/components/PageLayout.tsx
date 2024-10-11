@@ -9,7 +9,6 @@ export const PageLayout: FC<{
   addButton?: { title: string; modalKey: string };
 }> = ({ children, title, addButton }) => {
   const [, setSearchParams] = useSearchParams();
-
   return (
     <section>
       <NavBar />

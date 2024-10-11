@@ -63,7 +63,7 @@ export const CreateChatModal: FC = () => {
                       {({ input }) => (
                         <Form.Check
                           id={user.userIdentify}
-                          label={user.userIdentify}
+                          label={user.name}
                           {...input}
                           type="checkbox"
                         />

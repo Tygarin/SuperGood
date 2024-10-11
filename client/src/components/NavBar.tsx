@@ -17,7 +17,7 @@ export const NavBar: FC = () => {
         </BootstrapNavBar.Brand>
         {userInfo && (
           <div className="justify-content-end d-flex items-center gap-3">
-            <p className="m-0">{userInfo.userIdentify}</p>
+            <p className="m-0">{userInfo.name}</p>
             <Button onClick={logout} variant="danger" size="sm">
               Выйти
             </Button>

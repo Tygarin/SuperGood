@@ -42,13 +42,8 @@ export const CreateUserModal: FC = () => {
     },
   });
 
-  const handleSubmit = (values: CreateUserModelFormValues) => {
-    const model: CreateUserModel = {
-      name: values.name,
-      userIdentify: values.name,
-      password: values.password,
-      roles: [values.role],
-    };
+  const handleSubmit = (model: CreateUserModelFormValues) => {
+    
     mutateAsync(model);
   };
 
