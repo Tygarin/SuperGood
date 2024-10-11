@@ -22,6 +22,7 @@ router.post(
 router.post("/login", controller.login);
 router.get("/users", authMiddleware, controller.getUsers);
 router.get("/user", authMiddleware, controller.getUser);
+router.get("/user/:id", authMiddleware, controller.getChatByID);
 router.delete("/user/:id", authMiddleware, controller.deleteUser);
 
 module.exports = router;

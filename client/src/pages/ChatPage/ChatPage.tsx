@@ -15,10 +15,10 @@ const messages = [
 
 export const ChatPage: FC = () => {
   const { chatID } = useParams();
-  const { getChat } = useApi();
+  const { getChatByID } = useApi();
   const { data: currentChat } = useQuery({
-    queryFn: () => getChat(`${chatID}`),
-    queryKey: ["getChat", chatID],
+    queryFn: () => getChatByID(`${chatID}`),
+    queryKey: ["chat", chatID],
   });
   if (!currentChat) return <Navigate to="/chatsPage" />;
   return (

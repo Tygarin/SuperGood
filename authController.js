@@ -88,6 +88,16 @@ class AuthController {
     }
   }
 
+  async getChatByID(req, res) {
+    try {
+      const user = await User.findById(req.params.id);
+      res.json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ message: "Get user by id error" });
+    }
+  }
+
   async deleteUser(req, res) {
     try {
       if (req.user.id === req.params.id)

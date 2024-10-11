@@ -1,15 +1,25 @@
-import { useUsersList } from "libs";
+import { useApi } from "api";
+import { PageLayout } from "components";
 import { FC } from "react";
-import { useParams } from "react-router-dom";
+import { Row, Image } from "react-bootstrap";
+import { useQuery } from "react-query";
+import { Navigate, useParams } from "react-router-dom";
 
 export const ProfilePage: FC = () => {
   const { userID } = useParams();
-  const { users } = useUsersList();
-  const currentUser = users?.find(
-    ({ userIdentify }) => userID === userIdentify
-  );
+  const { getUserByID } = useApi();
+  const { data: currentUser } = useQuery({
+    queryFn: async () => await getUserByID(`${userID}`),
+    queryKey: ["user", userID],
+  });
 
-  if (!currentUser)
-    return <div className="text-center">Пользователь не найден</div>;
-  return <div>{currentUser.userIdentify}</div>;
+  if (!currentUser) return <Navigate to="/" />;
+
+  return (
+    <PageLayout title="Профиль">
+      <Row>
+        <Image src="./test.jpg" rounded />
+      </Row>
+    </PageLayout>
+  );
 };
