@@ -16,6 +16,7 @@ export const useApi = () => {
   const api = axios.create({
     baseURL: BASE_URL,
     headers: {
+      "Content-Type": "multipart/form-data",
       Authorization: isAuth ? `Token ${token}` : undefined, // Добавляем токен в заголовок
     },
   });
@@ -50,5 +51,15 @@ export const useApi = () => {
       api.delete<ChatModel>(`chat/chat/${id}`).then((res) => res.data),
     deleteUser: (id: string) =>
       api.delete<UserModel>(`auth/user/${id}`).then((res) => res.data),
+    uploadAvatar: (uploadData: UploadAvatarModel) => {
+      return api
+        .post<UserModel>("auth/uploadAvatar", uploadData)
+        .then((res) => res.data);
+    },
   };
 };
+
+export interface UploadAvatarModel {
+  userIdentify: string;
+  file: File;
+}

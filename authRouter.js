@@ -2,6 +2,7 @@ const Router = require("express");
 const router = new Router();
 const controller = require("./authController");
 const { check } = require("express-validator");
+const multer = require("multer");
 const authMiddleware = require("./middleware/authMiddleware");
 
 router.post(
@@ -24,5 +25,15 @@ router.get("/users", authMiddleware, controller.getUsers);
 router.get("/user", authMiddleware, controller.getUser);
 router.get("/user/:id", authMiddleware, controller.getChatByID);
 router.delete("/user/:id", authMiddleware, controller.deleteUser);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post("/uploadAvatar", upload.single("file"), controller.uploadAvatar);
 
 module.exports = router;

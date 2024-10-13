@@ -3,6 +3,7 @@ export interface CreateUserModel {
   userIdentify: string;
   password: string;
   role: string;
+  avatar?: string;
 }
 
 export interface UserModel extends Omit<CreateUserModel, "role"> {

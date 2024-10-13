@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const { secret } = require("./config");
+var fs = require("fs");
+var path = require("path");
 
 const generateAccessToken = (id, roles) => {
   const payload = {
@@ -110,6 +112,59 @@ class AuthController {
       console.log(error);
       res.status(400).json({ message: "Delete user error" });
     }
+  }
+  async uploadAvatar(req, res) {
+    fs.readFile(req.file.path, (err, data) => {
+      if (err) {
+        throw "Load_Err";
+      }
+      let type = req.file.mimetype.split("/")[1];
+      let name =
+        new Date().getTime() +
+        parseInt(Math.random() * Math.random() * 1000000);
+      let filename = name + "." + type;
+
+      fs.writeFile(
+        path.join(__dirname, "uploads/" + filename),
+        data,
+        async (err) => {
+          if (err) {
+            res.send({
+              err: 1,
+              msg: "Upload failed",
+            });
+            fs.unlink(req.file.path, (err) => {
+              if (err) {
+                console.log("Delete failed");
+              }
+            });
+            return;
+          }
+          const avatarUrl = "uploads/" + filename;
+          const { userIdentify } = req.body;
+
+          try {
+            const user = await User.findOneAndUpdate(
+              { userIdentify },
+              {
+                avatar: avatarUrl,
+              },
+              { new: true }
+            );
+            if (!user) {
+              return res.status(400).json({
+                message: `Пользователь с идентификатором ${userIdentify} не найден`,
+              });
+            }
+
+            res.json(user);
+          } catch (error) {
+            console.log(error);
+            res.status(400).json({ message: "Upload error" });
+          }
+        }
+      );
+    });
   }
 }
 
