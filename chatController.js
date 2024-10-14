@@ -1,12 +1,15 @@
 const Chat = require("./models/Chat");
+const User = require("./models/User");
 
 class ChatController {
   async createChat(req, res) {
     try {
       const { members, name } = req.body;
+      const user = await User.findById(req.user.id);
       const chat = new Chat({
-        members,
+        members: [...members, user.userIdentify],
         name,
+        createdByUserIdentify: user.userIdentify,
       });
       if (members.length < 2) {
         return res.status(400).json({

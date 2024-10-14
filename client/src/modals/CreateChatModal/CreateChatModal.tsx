@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 export const CreateChatModal: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { chatApi } = useApi();
-  const { users } = useUsersList();
+  const { users } = useUsersList(true);
   const isCreateChatModalOpen = searchParams.get("modal") === "createChat";
 
   const closeModal = () => {
