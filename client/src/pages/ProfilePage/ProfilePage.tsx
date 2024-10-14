@@ -7,9 +7,9 @@ import { Navigate, useParams } from "react-router-dom";
 
 export const ProfilePage: FC = () => {
   const { userID } = useParams();
-  const { getUserByID } = useApi();
+  const { authApi } = useApi();
   const { data: currentUser } = useQuery({
-    queryFn: async () => await getUserByID(`${userID}`),
+    queryFn: async () => await authApi.getUserByID(`${userID}`),
     queryKey: ["user", userID],
   });
 

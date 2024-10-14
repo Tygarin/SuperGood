@@ -13,10 +13,10 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const ChatsPage: FC = () => {
-  const { getChats } = useApi();
+  const { chatApi } = useApi();
   const { data } = useQuery({
     queryKey: ["getChats"],
-    queryFn: getChats,
+    queryFn: chatApi.getChats,
   });
   const isAdmin = useIsAdmin();
 
@@ -78,10 +78,10 @@ const EmptyTable: FC = () => {
 };
 
 const DeleteButton: FC<{ id: string }> = ({ id }) => {
-  const { deleteChat } = useApi();
+  const { chatApi } = useApi();
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading } = useMutation({
-    mutationFn: deleteChat,
+    mutationFn: chatApi.deleteChat,
     mutationKey: ["deleteChat", id],
     onSuccess: (deletedChat) => {
       queryClient.setQueriesData<ChatModel[]>("getChats", (_previousData) => {

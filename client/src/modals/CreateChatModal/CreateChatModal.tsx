@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 
 export const CreateChatModal: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { createChat } = useApi();
+  const { chatApi } = useApi();
   const { users } = useUsersList();
   const isCreateChatModalOpen = searchParams.get("modal") === "createChat";
 
@@ -23,7 +23,7 @@ export const CreateChatModal: FC = () => {
   const queryClient = useQueryClient();
 
   const { mutateAsync, isLoading, isError, error } = useMutation({
-    mutationFn: (chat: CreateChatModel) => createChat(chat),
+    mutationFn: chatApi.createChat,
     onSuccess: (newChat) => {
       queryClient.setQueriesData<ChatModel[]>("getChats", (_previousData) => {
         const previousData = _previousData ?? [];

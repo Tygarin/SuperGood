@@ -17,7 +17,7 @@ interface CreateUserModelFormValues extends Omit<CreateUserModel, "roles"> {
 
 export const CreateUserModal: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { registrationUserFn } = useApi();
+  const { authApi } = useApi();
   const isAdmin = useIsAdmin();
 
   const isCreateUserModalOpen =
@@ -31,7 +31,7 @@ export const CreateUserModal: FC = () => {
   const queryClient = useQueryClient();
 
   const { mutateAsync, isLoading, isError, error } = useMutation({
-    mutationFn: (user: CreateUserModel) => registrationUserFn(user),
+    mutationFn: authApi.registerUser,
     onSuccess: (newUser) => {
       queryClient.setQueriesData<UserModel[]>("usersList", (_previousData) => {
         const previousData = _previousData ?? [];

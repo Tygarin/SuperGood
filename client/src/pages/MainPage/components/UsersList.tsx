@@ -64,9 +64,9 @@ const DeleteButton: FC<{ user: UserModel }> = ({ user }) => {
   const isAdmin = useIsAdmin();
   const { confirm } = useConfirmationStore();
   const queryClient = useQueryClient();
-  const { deleteUser } = useApi();
+  const { authApi } = useApi();
   const { mutateAsync } = useMutation({
-    mutationFn: deleteUser,
+    mutationFn: authApi.deleteUser,
     mutationKey: ["deleteUser", user._id],
     onSuccess: () => {
       queryClient.setQueriesData<UserModel[]>("usersList", (_previousData) => {

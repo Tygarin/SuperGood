@@ -4,10 +4,10 @@ import { useQuery } from "react-query";
 
 export function useCurrentUser() {
   const { token } = useAuthContext();
-  const { getCurrentUser } = useApi();
+  const { authApi } = useApi();
   const { data, ...rest } = useQuery({
     queryKey: ["currentUser", token],
-    queryFn: getCurrentUser,
+    queryFn: authApi.getCurrentUser,
   });
   return { userInfo: data, ...rest };
 }

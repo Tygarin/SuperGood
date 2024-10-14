@@ -19,14 +19,14 @@ export const AuthPage: FC = () => {
     userIdentify: undefined,
     password: undefined,
   };
-  const { loginUserFn } = useApi();
+  const { authApi } = useApi();
 
   const { setToken } = useAuthContext();
   const navigate = useNavigate();
 
   const { mutateAsync, error, isError, isLoading } = useMutation({
     mutationFn: (user: { userIdentify: string; password: string }) =>
-      loginUserFn(user),
+      authApi.loginUser(user),
     onSuccess: ({ token }) => {
       setToken(token);
       navigate("/");
