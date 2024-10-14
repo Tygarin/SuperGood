@@ -16,10 +16,10 @@ export function useUsersList(otherUsers?: boolean) {
   const [users, usersMap] = useMemo(() => {
     const _users = data ?? [];
     const users = otherUsers
-      ? _users.filter((user) => user.userIdentify !== userInfo?.userIdentify)
+      ? _users.filter((user) => user._id !== userInfo?._id)
       : _users;
-    return [users, new Map(users.map((user) => [user.userIdentify, user]))];
-  }, [data, otherUsers, userInfo?.userIdentify]);
+    return [users, new Map(users.map((user) => [user._id, user]))];
+  }, [data, otherUsers, userInfo?._id]);
 
   return { users, usersMap, ...rest };
 }

@@ -1,19 +1,17 @@
 const Chat = require("./models/Chat");
-const User = require("./models/User");
 
 class ChatController {
   async createChat(req, res) {
     try {
       const { members, name } = req.body;
-      const user = await User.findById(req.user.id);
       const chat = new Chat({
-        members: [...members, user.userIdentify],
+        members: [...members, req.user.id],
         name,
-        createdByUserIdentify: user.userIdentify,
+        createdByUserID: req.user.id,
       });
-      if (members.length < 2) {
+      if (members.length < 1) {
         return res.status(400).json({
-          message: "Количество пользователей должно быть больше двух",
+          message: "Количество пользователей должно быть больше одного",
         });
       }
       await chat.save();
@@ -26,7 +24,13 @@ class ChatController {
   async getChats(req, res) {
     try {
       const chats = await Chat.find();
-      res.json(chats);
+      res.json(
+        chats.filter(
+          (chat) =>
+            chat.members.includes(req.user.id) ||
+            chat.createdByUserID === req.user.id
+        )
+      );
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "Get chats error" });
@@ -35,7 +39,16 @@ class ChatController {
   async getChat(req, res) {
     try {
       const chat = await Chat.findById(req.params.id);
-      res.json(chat);
+      if (
+        chat.members.includes(req.user.id) ||
+        chat.createdByUserID === req.user.id
+      ) {
+        res.json(chat);
+      } else {
+        return res.status(400).json({
+          message: "Чат не найден",
+        });
+      }
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "Get chat error" });

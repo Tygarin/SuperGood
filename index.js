@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const authRouter = require("./authRouter");
 const chatRouter = require("./chatRouter");
+const messageRouter = require("./routers/messageRouter");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const cors = require("cors");
@@ -38,6 +39,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/chat", chatRouter);
+app.use("/messages", messageRouter);
 
 const start = async () => {
   try {

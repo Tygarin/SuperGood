@@ -4,7 +4,7 @@ const Chat = new Schema(
   {
     members: { type: Array },
     name: { type: String, required: true },
-    createdByUserIdentify: { type: String, required: true },
+    createdByUserID: { type: String, required: true },
   },
   { timestamps: true }
 );

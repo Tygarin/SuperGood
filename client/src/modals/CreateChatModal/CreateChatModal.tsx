@@ -54,15 +54,15 @@ export const CreateChatModal: FC = () => {
                   Пользователи:
                   {users?.map((user) => (
                     <Field
-                      key={user.userIdentify}
+                      key={user._id}
                       component="input"
                       type="checkbox"
-                      value={user.userIdentify}
+                      value={user._id}
                       name="members"
                     >
                       {({ input }) => (
                         <Form.Check
-                          id={user.userIdentify}
+                          id={user._id}
                           label={user.name}
                           {...input}
                           type="checkbox"

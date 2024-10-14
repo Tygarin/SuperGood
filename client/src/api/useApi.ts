@@ -7,6 +7,8 @@ import {
   LoginResponse,
   CreateUserModel,
   UserModel,
+  CreateMessageModel,
+  MessageModel,
 } from "./responses";
 
 export const BASE_URL = "http://localhost:5000/";
@@ -63,5 +65,12 @@ export const useApi = () => {
       handleResponse(api.delete<ChatModel>(`chat/chat/${id}`)),
   };
 
-  return { authApi, chatApi };
+  const messagesApi = {
+    createMessage: (message: CreateMessageModel) =>
+      handleResponse(api.post<MessageModel>("messages/createMessage", message)),
+    getMessages: (chatID: string) =>
+      handleResponse(api.get<MessageModel[]>(`messages/messages/${chatID}`)),
+  };
+
+  return { authApi, chatApi, messagesApi };
 };
