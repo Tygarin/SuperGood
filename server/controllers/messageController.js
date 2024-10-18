@@ -30,6 +30,20 @@ class MessageController {
       res.status(400).json({ message: "Get messages error" });
     }
   }
+
+  async deleteMessages(req, res) {
+    try {
+      const { messageIDs } = req.body;
+    
+      const messages = await Message.deleteMany({
+        _id: messageIDs,
+      });
+      res.json(messages);
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ message: "Delete messages error" });
+    }
+  }
 }
 
 module.exports = new MessageController();

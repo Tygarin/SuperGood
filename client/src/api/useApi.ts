@@ -70,6 +70,8 @@ export const useApi = () => {
       handleResponse(api.post<MessageModel>("messages/createMessage", message)),
     getMessages: (chatID: string) =>
       handleResponse(api.get<MessageModel[]>(`messages/messages/${chatID}`)),
+    deleteMessages: (messageIDs: string[]) =>
+      api.post<MessageModel[]>(`messages/deleteMessages`, { messageIDs }),
   };
 
   return { authApi, chatApi, messagesApi };

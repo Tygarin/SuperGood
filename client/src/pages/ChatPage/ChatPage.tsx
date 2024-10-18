@@ -9,6 +9,7 @@ import { UserList } from "./UserList";
 import { Message } from "./Message";
 import { useCurrentChat } from "./libs";
 import { CreateUserForm } from "./CreateUserForm";
+import { ActiveMessagesActions } from "./ActiveMessagesActions";
 
 export const ChatPage: FC = () => {
   const { chatID } = useParams();
@@ -40,8 +41,21 @@ export const ChatPage: FC = () => {
       setTimeout(updateScroll, 1);
     });
 
+    socket?.on("getDeletedMessages", (messageIDs) => {
+      queryClient.setQueriesData<MessageModel[]>(
+        { queryKey: ["getMessages", chatID] },
+        (_previousData) => {
+          const previousData = _previousData ?? [];
+          return previousData.filter((oldMessage) =>
+            !messageIDs.includes(oldMessage._id)
+          );
+        }
+      );
+    });
+
     return () => {
       socket?.off("getMessage");
+      socket?.off("getDeletedMessages");
     };
   }, [chatID, queryClient, socket, messageContainerRef]);
 
@@ -66,6 +80,7 @@ export const ChatPage: FC = () => {
             style={{ scrollbarWidth: "thin" }}
             className="flex-1 gap-2 flex  flex-col py-2 overflow-auto pr-1"
           >
+            <ActiveMessagesActions />
             {(messages ?? []).map((message) => (
               <Message key={message._id} {...message} />
             ))}

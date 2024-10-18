@@ -44,6 +44,17 @@ io.on("connection", async (socket) => {
     }
   });
 
+  socket.on("sendDeletedMessages", (messageIDs, members) => {
+    const onlineUsersMap = new Map(
+      onlineUsers.map((user) => [user.userID, user])
+    );
+    for (const member of members) {
+      const onlineUserSocket = onlineUsersMap.get(member)?.socketID;
+      if (onlineUserSocket)
+        io.to(onlineUserSocket).emit("getDeletedMessages", messageIDs);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
     onlineUsers = onlineUsers.filter((user) => user.socketID !== socket.id);

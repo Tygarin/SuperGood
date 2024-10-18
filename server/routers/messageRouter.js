@@ -6,5 +6,6 @@ const router = new Router();
 
 router.post("/createMessage", authMiddleware, controller.createMessage);
 router.get("/messages/:chatID", authMiddleware, controller.getMessages);
+router.post("/deleteMessages", authMiddleware, controller.deleteMessages);
 
 module.exports = router;
