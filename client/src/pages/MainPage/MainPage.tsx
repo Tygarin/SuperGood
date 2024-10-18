@@ -4,11 +4,12 @@ import { Container } from "react-bootstrap";
 import { CreateUserModal } from "modals";
 import { Link } from "react-router-dom";
 import { NavBar } from "components";
+import { useNotifications } from "libs";
 
 export const MainPage: FC = () => {
-  const actionsList = [
-    { text: "Чаты", href: "/chatsPage" },
-  ];
+  const actionsList = [{ text: "Чаты", href: "/chatsPage" }];
+  useNotifications();
+
   return (
     <>
       <NavBar />

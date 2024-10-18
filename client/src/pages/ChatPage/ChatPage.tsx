@@ -48,6 +48,7 @@ export const ChatPage: FC = () => {
   const { data: messages } = useQuery({
     queryFn: () => messagesApi.getMessages(`${chatID}`),
     queryKey: ["getMessages", chatID],
+    refetchOnMount: "always",
   });
 
   useEffect(() => {

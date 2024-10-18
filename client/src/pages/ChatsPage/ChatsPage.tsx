@@ -4,7 +4,7 @@ import { useApi } from "api";
 import { ChatModel } from "api/responses";
 import { Button, PageLayout } from "components";
 import dayjs from "dayjs";
-import { useChats } from "libs";
+import { useChats, useNotifications } from "libs";
 import { CreateChatModal } from "modals";
 import { FC, PropsWithChildren } from "react";
 import { Table } from "react-bootstrap";
@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 
 export const ChatsPage: FC = () => {
   const { chats } = useChats();
+  useNotifications();
   return (
     <PageLayout
       addButton={{ title: "Создать чат", modalKey: "createChat" }}

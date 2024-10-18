@@ -13,7 +13,7 @@ export const NavBar: FC = () => {
     <BootstrapNavBar bg="light">
       <Container>
         <BootstrapNavBar.Brand as={Link} to="/">
-          Строй.ру
+          <img alt="прынь" width={150} src={require("../images/logo.png")} />
         </BootstrapNavBar.Brand>
         {userInfo && (
           <div className="justify-content-end d-flex items-center gap-3">

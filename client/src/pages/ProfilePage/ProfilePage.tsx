@@ -1,5 +1,6 @@
 import { useApi } from "api";
 import { PageLayout } from "components";
+import { useNotifications } from "libs";
 import { FC } from "react";
 import { Row, Image } from "react-bootstrap";
 import { useQuery } from "react-query";
@@ -12,6 +13,8 @@ export const ProfilePage: FC = () => {
     queryFn: async () => await authApi.getUserByID(`${userID}`),
     queryKey: ["user", userID],
   });
+
+  useNotifications();
 
   if (!currentUser) return <Navigate to="/" />;
 
