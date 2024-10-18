@@ -11,7 +11,9 @@ import { isNonNullish } from "remeda";
 import { useCurrentChat } from "./libs";
 import { Button } from "components";
 
-export const CreateUserForm: FC = () => {
+export const CreateUserForm: FC<{
+  messageContainerRef: React.MutableRefObject<HTMLDivElement | null>;
+}> = ({ messageContainerRef }) => {
   const { chatID } = useParams();
   const { messagesApi } = useApi();
   const { socket } = useSocketContext();
@@ -33,6 +35,10 @@ export const CreateUserForm: FC = () => {
           return [...previousData, data];
         }
       );
+      if (messageContainerRef.current) {
+        messageContainerRef.current.scrollTop =
+          messageContainerRef.current.scrollHeight;
+      }
     },
   });
 

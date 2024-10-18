@@ -15,8 +15,15 @@ export const ChatPage: FC = () => {
   const { messagesApi } = useApi();
   const { socket } = useSocketContext();
   const queryClient = useQueryClient();
-  const ref = useRef<HTMLDivElement | null>(null);
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
   const currentChat = useCurrentChat();
+
+  const updateScroll = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  };
 
   useEffect(() => {
     socket?.on("getMessage", (data) => {
@@ -30,35 +37,41 @@ export const ChatPage: FC = () => {
           return [...previousData, data];
         }
       );
+      setTimeout(updateScroll, 1);
     });
 
     return () => {
       socket?.off("getMessage");
     };
-  }, [chatID, queryClient, socket]);
+  }, [chatID, queryClient, socket, messageContainerRef]);
 
   const { data: messages } = useQuery({
     queryFn: () => messagesApi.getMessages(`${chatID}`),
     queryKey: ["getMessages", chatID],
   });
 
+  useEffect(() => {
+    updateScroll();
+  }, []);
+
   if (!currentChat) return <Navigate to="/chatsPage" />;
 
   return (
     <PageLayout title={currentChat.name}>
       <section className="flex">
-        <div className="h-[800px] flex-1 flex flex-col">
+        <div className="h-[83vh] flex-1 flex flex-col">
           <div
-            ref={ref}
+            ref={messageContainerRef}
+            style={{ scrollbarWidth: "thin" }}
             className="flex-1 gap-2 flex  flex-col py-2 overflow-auto pr-1"
           >
             {(messages ?? []).map((message) => (
               <Message key={message._id} {...message} />
             ))}
           </div>
-          <CreateUserForm />
+          <CreateUserForm messageContainerRef={messageContainerRef} />
         </div>
-        <div className="w-[20%]">
+        <div className="w-[20%] pl-4">
           <p>Список сотрудников в чате:</p>
           <UserList members={currentChat.members} />
         </div>
