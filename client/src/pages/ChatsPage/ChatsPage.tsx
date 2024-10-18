@@ -4,22 +4,16 @@ import { useApi } from "api";
 import { ChatModel } from "api/responses";
 import { Button, PageLayout } from "components";
 import dayjs from "dayjs";
-import { useIsAdmin } from "libs";
+import { useChats } from "libs";
 import { CreateChatModal } from "modals";
 import { FC, PropsWithChildren } from "react";
 import { Table } from "react-bootstrap";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const ChatsPage: FC = () => {
-  const { chatApi } = useApi();
-  const { data } = useQuery({
-    queryKey: ["getChats"],
-    queryFn: chatApi.getChats,
-  });
-  const isAdmin = useIsAdmin();
-
+  const { chats } = useChats();
   return (
     <PageLayout
       addButton={{ title: "Создать чат", modalKey: "createChat" }}
@@ -31,24 +25,22 @@ export const ChatsPage: FC = () => {
             <th className="text-center">Название</th>
             <th className="text-center">Дата создания</th>
             <th />
-            {isAdmin ? <th /> : null}
+            <th />
           </tr>
         </thead>
         <tbody>
-          {data?.length ? (
+          {chats.length ? (
             <>
-              {data?.map(({ name, _id, createdAt }) => (
+              {chats?.map(({ name, _id, createdAt }) => (
                 <tr key={_id}>
                   <Td>{name}</Td>
                   <Td>{dayjs(createdAt).format("DD.MM.YYYY HH:mm")}</Td>
                   <Td>
                     <Link to={_id}>Открыть</Link>
                   </Td>
-                  {isAdmin ? (
-                    <Td>
-                      <DeleteButton id={_id} />
-                    </Td>
-                  ) : null}
+                  <Td>
+                    <DeleteButton id={_id} />
+                  </Td>
                 </tr>
               ))}
             </>

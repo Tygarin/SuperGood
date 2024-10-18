@@ -22,16 +22,32 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 
+let onlineUsers = [];
+
 io.on("connection", async (socket) => {
   console.log("a user connected");
-  socket.on("join", ({ roomID }) => {
-    socket.join(roomID);
-    socket.emit("message", {
-      data: { user: "xz" },
-    });
+
+  socket.on("addNewUser", (userID) => {
+    if (!onlineUsers.some((user) => user.userID === userID)) {
+      onlineUsers.push({ userID, socketID: socket.id });
+    }
+    io.emit("getOnlineUsers", onlineUsers);
   });
+
+  socket.on("sendMessage", (message, members) => {
+    const onlineUsersMap = new Map(
+      onlineUsers.map((user) => [user.userID, user])
+    );
+    for (const member of members) {
+      const onlineUserSocket = onlineUsersMap.get(member)?.socketID;
+      if (onlineUserSocket) io.to(onlineUserSocket).emit("getMessage", message);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
+    onlineUsers = onlineUsers.filter((user) => user.socketID !== socket.id);
+    io.emit("getOnlineUsers", onlineUsers);
   });
 });
 
@@ -51,3 +67,4 @@ const start = async () => {
 };
 
 start();
+module.exports = { io };

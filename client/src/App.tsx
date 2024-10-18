@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthPage, ChatPage, ChatsPage, MainPage, ProfilePage } from "pages";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
-import { useAuthContext } from "context";
+import { SocketProvider, useAuthContext } from "context";
 import { ConfirmationContainer } from "components";
 
 const RoutesComponent: FC = () => {
@@ -30,9 +30,11 @@ const RoutesComponent: FC = () => {
 export const App: FC = () => {
   return (
     <BrowserRouter>
-      <RoutesComponent />
-      <ToastContainer />
-      <ConfirmationContainer />
+      <SocketProvider>
+        <RoutesComponent />
+        <ToastContainer />
+        <ConfirmationContainer />
+      </SocketProvider>
     </BrowserRouter>
   );
 };

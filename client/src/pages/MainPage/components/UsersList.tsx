@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useApi } from "api";
 import { UserModel } from "api/responses";
 import { Button } from "components";
+import { useSocketContext } from "context";
 import { useIsAdmin, useUsersList } from "libs";
 import { FC, Suspense } from "react";
-import { Spinner } from "react-bootstrap";
+import { Badge, Spinner } from "react-bootstrap";
 import { useMutation, useQueryClient } from "react-query";
 import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -37,17 +38,17 @@ const UsersComponent: FC = () => {
   const openCreateUserModal = () => {
     setSearchParams({ modal: "createUser" });
   };
+  const { onlineUsers } = useSocketContext();
+  const onlineUsersSet = new Set(onlineUsers.map((user) => user.userID));
 
   return (
     <>
       <div className="h-[300px] flex flex-col gap-2 overflow-auto">
         {users?.map((user) => (
           <div className="flex justify-between pr-2" key={user._id}>
-            <Link
-              className="no-underline"
-              to={`/profiles/${user._id}`}
-            >
+            <Link className="no-underline" to={`/profiles/${user._id}`}>
               {user.name}{" "}
+              {onlineUsersSet.has(user._id) ? <Badge>online</Badge> : null}
             </Link>
             <DeleteButton user={user} />
           </div>
